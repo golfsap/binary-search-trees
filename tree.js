@@ -43,19 +43,18 @@ function Tree(arr) {
   function deleteItem(value) {
     let currentNode = root;
     let previousNode = null;
+
     while (currentNode != null) {
       if (currentNode.data === value) {
         // Case 1: Lead node (no children)
         if (currentNode.left === null && currentNode.right === null) {
           if (previousNode === null) {
             root = null; // If root is the only node
-            return;
           } else if (previousNode.left === currentNode) {
             previousNode.left = null;
-            return;
+          } else {
+            previousNode.right = null;
           }
-          previousNode.right = null;
-          return;
         }
         // Case 2: One child node (either left or right)
         else if (currentNode.left === null || currentNode.right === null) {
@@ -63,37 +62,75 @@ function Tree(arr) {
             currentNode.left === null ? currentNode.right : currentNode.left;
           if (previousNode === null) {
             root = childNode;
-          } else if (previousNode.data > childNode.data) {
+          } else if (previousNode.left === currentNode) {
             previousNode.left = childNode;
-            return;
+          } else {
+            previousNode.right = childNode;
           }
-          previousNode.right = childNode;
-          return;
         }
         // Case 3: Two children nodes - find inorder successor
-        let successorParent = null;
-        let successor = currentNode.right;
+        else {
+          let successorParent = currentNode;
+          let successor = currentNode.right;
 
-        // Keep going left to find the leftmost node
-        while (successor.left != null) {
-          successorParent = successor;
-          successor = successor.left;
+          // Keep going left to find the leftmost node
+          while (successor.left != null) {
+            successorParent = successor;
+            successor = successor.left;
+          }
+          currentNode.data = successor.data;
+          if (successorParent !== currentNode) {
+            successorParent.left = successor.right;
+          } else {
+            currentNode.right = successor.right;
+          }
         }
-        currentNode.data = successor.data;
-        if (successorParent !== currentNode) {
-          successorParent.left = successor.right;
-        } else {
-          currentNode.right = successor.right;
-        }
+        return true;
       }
-      return;
+      // Continue searching
+      previousNode = currentNode;
+      if (value < currentNode.data) {
+        currentNode = currentNode.left;
+      } else {
+        currentNode = currentNode.right;
+      }
     }
-    // Continue searching
-    previousNode = currentNode;
-    if (value < currentNode.data) {
-      currentNode = currentNode.left;
-    } else {
-      currentNode = currentNode.right;
+    return false;
+  }
+
+  function find(value) {
+    let currentNode = root;
+    while (currentNode != null) {
+      if (currentNode.data === value) {
+        return currentNode;
+      }
+      if (value < currentNode.data) {
+        currentNode = currentNode.left;
+      } else {
+        currentNode = currentNode.right;
+      }
+    }
+    return null;
+  }
+
+  function levelOrder(callback) {
+    if (!callback) {
+      throw new Error("Callback function required.");
+    }
+
+    if (root === null) return;
+
+    const queue = [root]; // Initialize the queue with the root node
+    while (queue.length > 0) {
+      let currentNode = queue.shift(); // Dequeue the first node from the queue
+      callback(currentNode);
+      // Enqueue the left and right children (if they exist)
+      if (currentNode.left != null) {
+        queue.push(currentNode.left);
+      }
+      if (currentNode.right != null) {
+        queue.push(currentNode.right);
+      }
     }
   }
 
@@ -110,10 +147,11 @@ function Tree(arr) {
     }
   };
 
-  return { root, insert, prettyPrint };
+  return { root, insert, deleteItem, find, prettyPrint };
 }
 
 let arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const test = Tree(arr);
 
 test.prettyPrint(test.root);
+console.log(test.find(324));
