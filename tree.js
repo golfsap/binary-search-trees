@@ -170,6 +170,17 @@ function Tree(arr) {
     }
   }
 
+  function height(node) {
+    if (node === null) {
+      return -1;
+    }
+
+    const leftHeight = height(node.left);
+    const rightHeight = height(node.right);
+
+    return Math.max(leftHeight, rightHeight) + 1;
+  }
+
   const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
       return;
@@ -192,6 +203,7 @@ function Tree(arr) {
     inOrder,
     preOrder,
     postOrder,
+    height,
     prettyPrint,
   };
 }
@@ -204,6 +216,6 @@ test.prettyPrint(test.root);
 // test.prettyPrint(test.root);
 // console.log(test.root);
 
-test.postOrder(test.root, (a) => {
-  console.log(a.data);
-});
+// test.postOrder(test.root, (a) => console.log(a.data));
+const node = test.find(3);
+console.log(test.height(node));
