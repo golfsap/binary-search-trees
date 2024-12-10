@@ -134,6 +134,42 @@ function Tree(arr) {
     }
   }
 
+  function inOrder(node, callback) {
+    if (!callback) {
+      throw new Error("Callback function required.");
+    }
+
+    if (node != null) {
+      inOrder(node.left, callback);
+      callback(node);
+      inOrder(node.right, callback);
+    }
+  }
+
+  function preOrder(node, callback) {
+    if (!callback) {
+      throw new Error("Callback function required.");
+    }
+
+    if (node != null) {
+      callback(node);
+      preOrder(node.left, callback);
+      preOrder(node.right, callback);
+    }
+  }
+
+  function postOrder(node, callback) {
+    if (!callback) {
+      throw new Error("Callback function required.");
+    }
+
+    if (node != null) {
+      postOrder(node.left, callback);
+      postOrder(node.right, callback);
+      callback(node);
+    }
+  }
+
   const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
       return;
@@ -147,11 +183,27 @@ function Tree(arr) {
     }
   };
 
-  return { root, insert, deleteItem, find, prettyPrint };
+  return {
+    root,
+    insert,
+    deleteItem,
+    find,
+    levelOrder,
+    inOrder,
+    preOrder,
+    postOrder,
+    prettyPrint,
+  };
 }
 
 let arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const test = Tree(arr);
 
 test.prettyPrint(test.root);
-console.log(test.find(324));
+// console.log(test.deleteItem(8));
+// test.prettyPrint(test.root);
+// console.log(test.root);
+
+test.postOrder(test.root, (a) => {
+  console.log(a.data);
+});
