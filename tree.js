@@ -181,8 +181,49 @@ function Tree(arr) {
     return Math.max(leftHeight, rightHeight) + 1;
   }
 
+  function depth(node) {
+    let currentNode = root;
+    let depth = 0;
+
+    while (currentNode != null) {
+      if (currentNode === node) {
+        return depth;
+      }
+      if (currentNode.data > node.data) {
+        currentNode = currentNode.left;
+      } else {
+        currentNode = currentNode.right;
+      }
+      depth++;
+    }
+    // Did not find node?
+    return -1;
+  }
+
+  function isBalanced() {
+    function checkHeight(node) {
+      if (node === null) {
+        return 0;
+      }
+      const leftSubtreeHeight = checkHeight(node.left);
+      if (leftSubtreeHeight === -1) return -1;
+
+      const rightSubtreeHeight = checkHeight(node.right);
+      if (rightSubtreeHeight === -1) return -1;
+
+      if (Math.abs(leftSubtreeHeight - rightSubtreeHeight) > 1) {
+        return -1;
+      }
+
+      return Math.max(leftSubtreeHeight, rightSubtreeHeight) + 1;
+    }
+
+    return checkHeight(root) !== -1;
+  }
+
   const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
+      //   console.log("Encountered undefined or null node");
       return;
     }
     if (node.right !== null) {
@@ -204,6 +245,8 @@ function Tree(arr) {
     preOrder,
     postOrder,
     height,
+    depth,
+    isBalanced,
     prettyPrint,
   };
 }
@@ -217,5 +260,14 @@ test.prettyPrint(test.root);
 // console.log(test.root);
 
 // test.postOrder(test.root, (a) => console.log(a.data));
-const node = test.find(3);
-console.log(test.height(node));
+test.insert(11);
+test.insert(10);
+test.deleteItem(11);
+// console.log(test.root);
+
+// test.insert(13);
+// test.insert(14);
+test.prettyPrint(test.root);
+// const node = test.find(11);
+// console.log(node);
+console.log(test.isBalanced());
