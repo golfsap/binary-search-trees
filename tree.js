@@ -2,13 +2,17 @@ function Node(value) {
   return { data: value, left: null, right: null };
 }
 
-function Tree(arr) {
+module.exports = function Tree(arr) {
   // first, remove duplicates then sort the array
   arr = [...new Set(arr)];
   arr.sort((a, b) => a - b);
   //   console.log(arr[5]);
 
   let root = buildTree(arr, 0, arr.length - 1);
+
+  function getRoot() {
+    return root;
+  }
 
   function buildTree(array, start, end) {
     if (start > end) return null;
@@ -221,15 +225,15 @@ function Tree(arr) {
       return Math.max(leftSubtreeHeight, rightSubtreeHeight) + 1;
     }
 
-    return checkHeight(this.root) !== -1;
+    return checkHeight(root) !== -1;
   }
 
   function rebalance() {
     let nodes = [];
-    inOrder(this.root, (a) => nodes.push(a.data));
+    inOrder(root, (a) => nodes.push(a.data));
     console.log(nodes);
 
-    this.root = buildTree(nodes, 0, nodes.length - 1);
+    root = buildTree(nodes, 0, nodes.length - 1);
     // console.log(this.isBalanced());
   }
 
@@ -247,7 +251,7 @@ function Tree(arr) {
   };
 
   return {
-    root,
+    getRoot,
     insert,
     deleteItem,
     find,
@@ -261,30 +265,30 @@ function Tree(arr) {
     rebalance,
     prettyPrint,
   };
-}
+};
 
-let arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-const test = Tree(arr);
+// let arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
+// const test = Tree(arr);
 
-test.prettyPrint(test.root);
-// console.log(test.deleteItem(8));
-// test.prettyPrint(test.root);
-// console.log(test.root);
+// test.prettyPrint(test.getRoot());
+// // console.log(test.deleteItem(8));
+// // test.prettyPrint(test.root);
+// // console.log(test.root);
 
-// test.postOrder(test.root, (a) => console.log(a.data));
-test.insert(11);
-test.insert(10);
-// test.deleteItem(11);
-// console.log(test.root);
+// // test.postOrder(test.root, (a) => console.log(a.data));
+// test.insert(11);
+// test.insert(10);
+// // test.deleteItem(11);
+// // console.log(test.root);
 
-// test.insert(13);
-// test.insert(14);
-test.prettyPrint(test.root);
-// const node = test.find(11);
-// console.log(node);
-console.log(test.isBalanced());
-// test.inOrder(test.root, (a) => console.log(a.data));
-test.rebalance();
-test.prettyPrint(test.root);
-console.log(test.root);
-console.log(test.isBalanced());
+// // test.insert(13);
+// // test.insert(14);
+// test.prettyPrint(test.getRoot());
+// // const node = test.find(11);
+// // console.log(node);
+// console.log(test.isBalanced());
+// // test.inOrder(test.root, (a) => console.log(a.data));
+// test.rebalance();
+// test.prettyPrint(test.getRoot());
+// console.log(test.getRoot());
+// console.log(test.isBalanced());
